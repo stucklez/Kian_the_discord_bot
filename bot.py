@@ -68,5 +68,12 @@ async def on_message(message):
         print('Github')
         await message.channel.send('!p https://www.youtube.com/watch?v=Vkvh2yd2cxY')
 
+    if 'Kian kan man' in message.content.lower():
+        choice = random.randrange(1, 2)
+        if choice is 1:
+            await message.channel.send('Ja')
+        elif choice is 2:
+            await message.channel.send('Nej')
+
 
 client.run(TOKEN)
