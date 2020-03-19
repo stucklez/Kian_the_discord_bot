@@ -3,6 +3,8 @@ import os
 
 import random
 import discord
+from discord.ext import commands
+from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
 
 
@@ -17,30 +19,53 @@ quotesfile.close()
 
 print(f'{kian_quotes}\n')
 
-client = discord.Client()
+bot = commands.Bot(command_prefix = '<3')
 
+@bot.command()
+async def brev(ctx):
+    print(f'joining')
+    brev = FFmpegPCMAudio('Der breeeeeev!.mp3')
+    if ctx.voice_client is not None:
+        ctx.voice_client.play(brev)
+    else:
+        channel = ctx.message.author.voice.channel
+        vc = await channel.connect()
+        vc.play(brev)
 
+@bot.command()
+async def leave(ctx):
+    vc = bot.voice_clients
+    for i in vc:
+        if i.guild == ctx.message.channel.guild:
+            await i.disconnect()
+        else:
+            ctx.channel.send('Not connected to voice channel')
 
-@client.event
+@bot.command()
+async def ping(ctx):
+    print(f'Ping')
+    await ctx.channel.send(f'Ping {round(bot.latency * 1000)}')
+
+@bot.event
 async def on_ready():
-    guild = discord.utils.find(lambda g: g.name == GUILD, client.guilds)
+    guild = discord.utils.find(lambda g: g.name == GUILD, bot.guilds)
 
     print(
-        f'{client.user} is connected to the following guild:\n'
+        f'{bot.user} is connected to the following guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
 
     members = '\n - '.join([member.name for member in guild.members])
     print(f'Guild Members:\n - {members}')
 
-@client.event
+@bot.event
 async def on_member_join(member):
     await member.create_dm()
-    await member.dm_channel.send(f'HELLO {member.name}, FUCK YOU')
+    await member.dm_channel.send(f'HELLO {member.name}')
 
-@client.event
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == bot.user:
         return
 
     if message.content == 'Kian! QUOTES!':
@@ -68,12 +93,19 @@ async def on_message(message):
         print('Github')
         await message.channel.send('!p https://www.youtube.com/watch?v=Vkvh2yd2cxY')
 
-    if 'Kian kan man' in message.content.lower():
-        choice = random.randrange(1, 2)
+    if 'kian kan man' in message.content.lower():
+        print(f'Kian kan man')
+        choice = random.randint(1, 2)
+        print(f'{choice}')
         if choice is 1:
             await message.channel.send('Ja')
         elif choice is 2:
             await message.channel.send('Nej')
+    
+    if 'nemt kian' in message.content.lower():
+        await message.channel.send('ALTID')
 
+    
+    await bot.process_commands(message)
 
-client.run(TOKEN)
+bot.run(TOKEN)
