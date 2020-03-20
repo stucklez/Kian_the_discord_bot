@@ -68,7 +68,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if message.content == 'Kian! QUOTES!':
+    if message.content == 'Kian! QUOTE!':
         response = random.choice(kian_quotes)
         await message.channel.send(response)
 
@@ -76,7 +76,6 @@ async def on_message(message):
         await message.channel.send('Happy Birthday! 🎈🎉')
 
     if '!quote' in message.content.lower():
-        print(f'QUOTE')
         quote = message.content
         string_split = quote.split(" ")
         string_split.remove('!quote')
@@ -87,16 +86,17 @@ async def on_message(message):
         quotesfile = open("quotes.txt", "a")
         quotesfile.write(f'\n{new_quote}')
         quotesfile.close()
-        print(f'{kian_quotes}\n')
+        await message.channel.send(f'Added quote {new_quote}')
+
+    if message.content.lower() == 'f':
+        await message.channel.send('F')  
     
     if message.author == 'GitHub':
         print('Github')
         await message.channel.send('!p https://www.youtube.com/watch?v=Vkvh2yd2cxY')
 
     if 'kian kan man' in message.content.lower():
-        print(f'Kian kan man')
         choice = random.randint(1, 2)
-        print(f'{choice}')
         if choice is 1:
             await message.channel.send('Ja')
         elif choice is 2:
