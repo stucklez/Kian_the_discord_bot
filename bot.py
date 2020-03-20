@@ -1,6 +1,5 @@
 # bot.py
 import os
-
 import random
 import discord
 from discord.ext import commands
@@ -39,7 +38,7 @@ async def leave(ctx):
         if i.guild == ctx.message.channel.guild:
             await i.disconnect()
         else:
-            ctx.channel.send('Not connected to voice channel')
+            await ctx.channel.send('Not connected to voice channel')
 
 @bot.command()
 async def ping(ctx):
@@ -84,19 +83,16 @@ async def on_member_join(member):
 
 @bot.event
 async def on_message(message):
-    if message.author == bot.user:
+    if message.author is bot.user:
         return
 
     if 'happy birthday' in message.content.lower():
         await message.channel.send('Happy Birthday! 🎈🎉')
 
 
-    if message.content.lower() == 'f':
+    if message.content.lower() is 'f':
         await message.channel.send('F')  
     
-    if message.author == 'GitHub':
-        print('Github')
-        await message.channel.send('!p https://www.youtube.com/watch?v=Vkvh2yd2cxY')
 
     if 'kian kan' in message.content.lower() or 'kian må' in message.content.lower():
         choice = random.randint(1, 2)
