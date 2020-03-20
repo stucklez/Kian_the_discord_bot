@@ -46,6 +46,25 @@ async def ping(ctx):
     print(f'Ping')
     await ctx.channel.send(f'Ping {round(bot.latency * 1000)}')
 
+@bot.command()
+async def quote_add(ctx):
+    quote = ctx.message.content
+    string_split = quote.split(" ")
+    string_split.remove('<3quote_add')
+    new_quote = ""
+    for string in string_split:
+        new_quote += string + " "
+    kian_quotes.append(new_quote)
+    quotesfile = open("quotes.txt", "a")
+    quotesfile.write(f'\n{new_quote}')
+    quotesfile.close()
+    await ctx.channel.send(f'Added quote {new_quote}')
+
+@bot.command()
+async def quote(ctx):
+    response = random.choice(kian_quotes)
+    await ctx.channel.send(response)
+
 @bot.event
 async def on_ready():
     guild = discord.utils.find(lambda g: g.name == GUILD, bot.guilds)
@@ -68,25 +87,9 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if message.content == 'Kian! QUOTE!':
-        response = random.choice(kian_quotes)
-        await message.channel.send(response)
-
     if 'happy birthday' in message.content.lower():
         await message.channel.send('Happy Birthday! 🎈🎉')
 
-    if '!quote' in message.content.lower():
-        quote = message.content
-        string_split = quote.split(" ")
-        string_split.remove('!quote')
-        new_quote = ""
-        for string in string_split:
-           new_quote += string + " "
-        kian_quotes.append(new_quote)
-        quotesfile = open("quotes.txt", "a")
-        quotesfile.write(f'\n{new_quote}')
-        quotesfile.close()
-        await message.channel.send(f'Added quote {new_quote}')
 
     if message.content.lower() == 'f':
         await message.channel.send('F')  
@@ -95,7 +98,7 @@ async def on_message(message):
         print('Github')
         await message.channel.send('!p https://www.youtube.com/watch?v=Vkvh2yd2cxY')
 
-    if 'kian kan man' in message.content.lower():
+    if 'kian kan' in message.content.lower() or 'kian må' in message.content.lower():
         choice = random.randint(1, 2)
         if choice is 1:
             await message.channel.send('Ja')
