@@ -57,7 +57,7 @@ async def oof(ctx):
         vc.play(oof)
     while vc.is_playing():
         True
-    await ctx.message.add_reaction(letter)
+    await ctx.message.add_reaction(comet)
     await vc.disconnect()
 
 @bot.command()
