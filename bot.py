@@ -21,6 +21,25 @@ print(f'{kian_quotes}\n')
 bot = commands.Bot(command_prefix = '<3')
 
 @bot.command()
+async def stop(ctx):
+    await ctx.voice_client.stop()
+
+@bot.command()
+async def pause(ctx):
+    if ctx.voice_client is None or ctx.voice_client.is_playing() is False:
+        await ctx.channel.send('Not playing anything')
+    else:
+        await ctx.voice_client.pause()
+
+@bot.command()
+async def resume(ctx):
+    if ctx.voice_client is not None or ctx.voice_client.is_playing() is True:
+        await ctx.channel.send('Already playing')
+    else:
+        await ctx.voice_client.resume()
+
+
+@bot.command()
 async def brev(ctx):
     print(f'joining')
     brev = FFmpegPCMAudio('Der breeeeeev!.mp3')
@@ -30,6 +49,10 @@ async def brev(ctx):
         channel = ctx.message.author.voice.channel
         vc = await channel.connect()
         vc.play(brev)
+    while vc.is_playing():
+        True
+    
+    await vc.disconnect()
 
 @bot.command()
 async def leave(ctx):
