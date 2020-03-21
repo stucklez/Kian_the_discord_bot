@@ -16,7 +16,14 @@ quotesfile = open("quotes.txt","r")
 kian_quotes = quotesfile.readlines()
 quotesfile.close()
 
+play_queue = []
 print(f'{kian_quotes}\n')
+
+#Emojis for reactions
+like = '\U0001F44D'
+letter = '\U0001F48C'
+horn_emote = '\U0001F4EF'
+comet = '\U00002604'
 
 bot = commands.Bot(command_prefix = '<3')
 
@@ -38,6 +45,36 @@ async def resume(ctx):
     else:
         await ctx.voice_client.resume()
 
+@bot.command()
+async def oof(ctx):
+    print(f'joining')
+    oof = FFmpegPCMAudio('Roblox Death Sound (Oof).mp3')
+    if ctx.voice_client is not None:
+        ctx.voice_client.play(oof)
+    else:
+        channel = ctx.message.author.voice.channel
+        vc = await channel.connect()
+        vc.play(oof)
+    while vc.is_playing():
+        True
+    await ctx.message.add_reaction(letter)
+    await vc.disconnect()
+
+@bot.command()
+async def horn(ctx):
+    print(f'joining')
+    horn = FFmpegPCMAudio('mlg-airhorn.mp3')
+    if ctx.voice_client is not None:
+        ctx.voice_client.play(horn)
+    else:
+        channel = ctx.message.author.voice.channel
+        vc = await channel.connect()
+        vc.play(horn)
+    while vc.is_playing():
+        True
+    await ctx.message.add_reaction(horn_emote)
+    await vc.disconnect()
+
 
 @bot.command()
 async def brev(ctx):
@@ -51,7 +88,7 @@ async def brev(ctx):
         vc.play(brev)
     while vc.is_playing():
         True
-    
+    await ctx.message.add_reaction(letter)
     await vc.disconnect()
 
 @bot.command()
@@ -80,6 +117,7 @@ async def quote_add(ctx):
     quotesfile = open("quotes.txt", "a")
     quotesfile.write(f'\n{new_quote}')
     quotesfile.close()
+    await ctx.message.add_reaction(like)
     await ctx.channel.send(f'Added quote {new_quote}')
 
 @bot.command()
