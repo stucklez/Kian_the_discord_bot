@@ -23,7 +23,6 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pip install -r requirements.txt
         python3 -m pip install -U discord.py
         pip install -U python-dotenv
     - name: Lint with flake8
