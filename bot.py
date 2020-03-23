@@ -1,4 +1,5 @@
 # bot.py
+#import modules 
 import os
 import random
 import discord
@@ -6,12 +7,13 @@ from discord.ext import commands
 from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
 
-
+#load enviroment variables
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 GUILD_ID = os.getenv('DISCORD_GUILD')
 
+#read quotes from the textfile
 kian_quotes = []
 quotesfile = open("quotes.txt","r")
 kian_quotes = quotesfile.readlines()
@@ -29,6 +31,7 @@ cry = '\U0001F622'
 
 bot = commands.Bot(command_prefix = '<3')
 
+#commands which trigger on messages with the prefix <3
 @bot.command()
 async def stop(ctx):
     await ctx.voice_client.stop()
