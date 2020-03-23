@@ -158,9 +158,9 @@ async def on_message(message):
 
     if 'kian kan' in message.content.lower() or 'kian må' in message.content.lower() or 'kian skal' in message.content.lower():
         choice = random.randint(1, 2)
-        if choice is 1:
+        if choice == 1:
             await message.channel.send('Ja')
-        elif choice is 2:
+        elif choice == 2:
             await message.channel.send('Nej')
     
     if 'nemt kian' in message.content.lower():
