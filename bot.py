@@ -146,6 +146,7 @@ async def on_member_join(member):
     await member.create_dm()
     await member.dm_channel.send(f'HELLO {member.name}')
 
+#events which trigger on specific messages
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
