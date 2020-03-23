@@ -123,9 +123,7 @@ async def quote_add(ctx):
 
 @bot.command()
 async def quote(ctx):
-    dat4 = discord.client.get_guild(673896650934321182)
-
-    if ctx.message.guild is dat4:
+    if ctx.message.guild is GUILD:
         response = random.choice(kian_quotes)
         await ctx.channel.send(response)
 
@@ -151,16 +149,10 @@ async def on_message(message):
     if message.author is bot.user:
         return
 
-    if 'happy birthday' in message.content.lower():
-        await message.channel.send('Happy Birthday! 🎈🎉')
-
-
     if message.content.lower() is 'f':
         await message.channel.send('F')
-        await message.add_reaction(cry)
-    
 
-    if 'kian kan' in message.content.lower() or 'kian må' or 'kian skal' in message.content.lower():
+    if 'kian kan' in message.content.lower() or 'kian må' in message.content.lower() or 'kian skal' in message.content.lower():
         choice = random.randint(1, 2)
         if choice is 1:
             await message.channel.send('Ja')
