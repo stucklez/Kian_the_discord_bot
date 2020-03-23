@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
+GUILD_ID = os.getenv('DISCORD_GUILD')
 
 kian_quotes = []
 quotesfile = open("quotes.txt","r")
@@ -108,38 +109,34 @@ async def ping(ctx):
 
 @bot.command()
 async def quote_add(ctx):
-    quote = ctx.message.content
-    string_split = quote.split(" ")
-    string_split.remove('<3quote_add')
-    new_quote = ""
-    for string in string_split:
-        new_quote += string + " "
-    kian_quotes.append(new_quote)
-    quotesfile = open("quotes.txt", "a")
-    quotesfile.write(f'\n{new_quote}')
-    quotesfile.close()
-    await ctx.message.add_reaction(like)
-    await ctx.channel.send(f'Added quote {new_quote}')
+    server_id = ctx.message.guild.id
+    if str(server_id) == GUILD_ID:
+        quote = ctx.message.content
+        string_split = quote.split(" ")
+        string_split.remove('<3quote_add')
+        new_quote = ""
+        for string in string_split:
+            new_quote += string + " "
+        kian_quotes.append(new_quote)
+        quotesfile = open("quotes.txt", "a")
+        quotesfile.write(f'\n{new_quote}')
+        quotesfile.close()
+        await ctx.message.add_reaction(like)
+    else:
+        await ctx.channel.send('Not connected to the right server')
 
 @bot.command()
 async def quote(ctx):
-    dat4 = discord.client.get_guild(673896650934321182)
-
-    if ctx.message.guild is dat4:
+    server_id = ctx.message.guild.id
+    if str(server_id) == GUILD_ID:
         response = random.choice(kian_quotes)
         await ctx.channel.send(response)
+    else:
+        await ctx.channel.send('Not connected to the right server')
 
 @bot.event
 async def on_ready():
-    guild = discord.utils.find(lambda g: g.name == GUILD, bot.guilds)
-
-    print(
-        f'{bot.user} is connected to the following guild:\n'
-        f'{guild.name}(id: {guild.id})'
-    )
-
-    members = '\n - '.join([member.name for member in guild.members])
-    print(f'Guild Members:\n - {members}')
+    print('Ready')
 
 @bot.event
 async def on_member_join(member):
@@ -148,19 +145,15 @@ async def on_member_join(member):
 
 @bot.event
 async def on_message(message):
-    if message.author is bot.user:
+    if message.author == bot.user:
         return
 
-    if 'happy birthday' in message.content.lower():
-        await message.channel.send('Happy Birthday! 🎈🎉')
+    f_in_chat = message.content.split(" ")
+    for i in f_in_chat:
+        if i.lower() == 'f':
+            await message.channel.send('F') 
 
-
-    if message.content.lower() is 'f':
-        await message.channel.send('F')
-        await message.add_reaction(cry)
-    
-
-    if 'kian kan' in message.content.lower() or 'kian må' or 'kian skal' in message.content.lower():
+    if 'kian kan' in message.content.lower() or 'kian må' in message.content.lower() or 'kian skal' in message.content.lower():
         choice = random.randint(1, 2)
         if choice is 1:
             await message.channel.send('Ja')
