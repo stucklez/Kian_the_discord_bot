@@ -24,6 +24,7 @@ like = '\U0001F44D'
 letter = '\U0001F48C'
 horn_emote = '\U0001F4EF'
 comet = '\U00002604'
+cry = '\U0001F622'
 
 bot = commands.Bot(command_prefix = '<3')
 
@@ -122,8 +123,11 @@ async def quote_add(ctx):
 
 @bot.command()
 async def quote(ctx):
-    response = random.choice(kian_quotes)
-    await ctx.channel.send(response)
+    dat4 = discord.client.get_guild(673896650934321182)
+
+    if ctx.message.guild is dat4:
+        response = random.choice(kian_quotes)
+        await ctx.channel.send(response)
 
 @bot.event
 async def on_ready():
@@ -152,10 +156,11 @@ async def on_message(message):
 
 
     if message.content.lower() is 'f':
-        await message.channel.send('F')  
+        await message.channel.send('F')
+        await message.add_reaction(cry)
     
 
-    if 'kian kan' in message.content.lower() or 'kian må' in message.content.lower():
+    if 'kian kan' in message.content.lower() or 'kian må' or 'kian skal' in message.content.lower():
         choice = random.randint(1, 2)
         if choice is 1:
             await message.channel.send('Ja')
