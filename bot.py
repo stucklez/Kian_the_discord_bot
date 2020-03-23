@@ -1,4 +1,5 @@
 # bot.py
+#import modules
 import os
 import random
 import discord
@@ -6,12 +7,13 @@ from discord.ext import commands
 from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
 
-
+#loading enviroment variables
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 GUILD_ID = os.getenv('DISCORD_GUILD')
 
+#reading quotes from the text file and storing them for use
 kian_quotes = []
 quotesfile = open("quotes.txt","r")
 kian_quotes = quotesfile.readlines()
@@ -29,6 +31,7 @@ cry = '\U0001F622'
 
 bot = commands.Bot(command_prefix = '<3')
 
+#commands which trigger when the prefix <3 is used
 @bot.command()
 async def stop(ctx):
     await ctx.voice_client.stop()
@@ -134,15 +137,18 @@ async def quote(ctx):
     else:
         await ctx.channel.send('Not connected to the right server')
 
+#event which triggers when the bot connects
 @bot.event
 async def on_ready():
     print('Ready')
 
+#event which triggers and sends a message to a new user who joins the server
 @bot.event
 async def on_member_join(member):
     await member.create_dm()
     await member.dm_channel.send(f'HELLO {member.name}')
 
+#events which trigger on specific messages written in text channels
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -163,7 +169,7 @@ async def on_message(message):
     if 'nemt kian' in message.content.lower():
         await message.channel.send('ALTID')
 
-    
+    #makes the bot listen for commands
     await bot.process_commands(message)
 
 bot.run(TOKEN)
