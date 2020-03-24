@@ -140,7 +140,7 @@ async def quote(ctx):
 @bot.event
 async def on_ready():
     print('Ready')
-
+#pm's a user when the user joins the server
 @bot.event
 async def on_member_join(member):
     await member.create_dm()
