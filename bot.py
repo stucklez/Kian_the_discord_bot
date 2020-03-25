@@ -1,6 +1,7 @@
 # bot.py
 #import modules
 import os
+import pymongo
 import random
 import discord
 from discord.ext import commands
@@ -12,15 +13,63 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 GUILD_ID = os.getenv('DISCORD_GUILD')
+MONGO_URI = os.getenv('MONGO_URI')
+
+dbclient = pymongo.MongoClient(MONGO_URI)
+db = dbclient.Kian
+quotes_col = db.Quotes
+movies_col = db.Movies
+
+class Quote:
+    _id = ""
+    author = ""
+    quote = ""
+
+    def __init__(self, id, name, iquote):
+        self._id = id
+        self.author = name
+        self.quote = iquote
+
+class Movie:
+    _id = ""
+    title = ""
+    genre = ""
+    year = 0
+
+    def __init__(self, id, title, genre, year):
+        self._id = id
+        self.title = title
+        self.genre = genre
+        self.year = year
+
 
 #reading quotes from the text file and storing them for use
-kian_quotes = []
-quotesfile = open("quotes.txt","r")
-kian_quotes = quotesfile.readlines()
-quotesfile.close()
+def initquotes():
+    kian = []
+    mongo = list(quotes_col.find())
+    for i in mongo:
+        kian.append(Quote(i["_id"], i["Author"], i["Quote"]))
+    return kian
+
+def initmovies():
+    movies = []
+    mongo = list(movies_col.find())
+    for i in mongo:
+        movies.append(Movie(i["_id"], i["Title"], i["Genre"], i["Year"]))
+    return movies
+
+kian_quotes = initquotes()
+
+for i in kian_quotes:
+    print(f'{i.author} - "{i.quote}"')
+
+
+#quotesfile = open("quotes.txt","r")
+#kian_quotes = quotesfile.readlines()
+#quotesfile.close()
 
 play_queue = []
-print(f'{kian_quotes}\n')
+#print(f'{kian_quotes}\n')
 
 #Emojis for reactions
 like = '\U0001F44D'
