@@ -4,6 +4,7 @@ import os
 import pymongo
 import random
 import discord
+import shlex
 from discord.ext import commands
 from discord import FFmpegPCMAudio
 from dotenv import load_dotenv
@@ -22,22 +23,14 @@ db = dbclient.Kian
 quotes_col = db.Quotes
 movies_col = db.Movies
 
-
-
-#reading quotes from the text file and storing them for use
-
+#reading elements from the database
 kian_quotes = hp.initquotes(quotes_col)
+kian_movies = hp.initmovies(movies_col)
 
 for i in kian_quotes:
-    print(f'{i.author} - "{i.quote}"')
-
-
-#quotesfile = open("quotes.txt","r")
-#kian_quotes = quotesfile.readlines()
-#quotesfile.close()
-
-play_queue = []
-#print(f'{kian_quotes}\n')
+    print(f'{i.quote}')
+for i in kian_movies:
+    print(f'{i.title}')
 
 #Emojis for reactions
 like = '\U0001F44D'
@@ -45,6 +38,7 @@ letter = '\U0001F48C'
 horn_emote = '\U0001F4EF'
 comet = '\U00002604'
 cry = '\U0001F622'
+movie_emote = '\U0001F3A5'
 
 bot = commands.Bot(command_prefix = '<3')
 
@@ -149,6 +143,46 @@ async def quote(ctx):
         await ctx.channel.send(f'{response.author} - {response.quote}')
     else:
         await ctx.channel.send('Not connected to the right server')
+
+@bot.command()
+async def add_movie(ctx):
+    movie = hp.get_movie(ctx.message.content)
+    movie.server = ctx.message.guild.id
+    document = {"Title": movie.title,
+                "Genre": movie.genre, 
+                "Year": movie.year, 
+                "Server": movie.server}
+    _id = movies_col.insert_one(document).inserted_id
+    movie._id = _id
+    kian_movies.append(movie)
+    await ctx.message.add_reaction(movie_emote)
+
+@bot.command()
+async def movie(ctx):
+    response = random.choice(kian_movies)
+    kian_movies.remove(response)
+    delete_query = {"_id": response._id}
+    movies_col.delete_one(delete_query)
+    await ctx.channel.send(f'Tonights movie will be: {response.title}')
+
+@bot.command()
+async def by_genre(ctx):
+    string = ctx.message.content
+    string_split = shlex.split(string)
+    string_split.remove('<3by_genre')
+    filtered_movies = []
+    for i in kian_movies:
+        if i.server == ctx.message.guild.id and i.genre == string_split[0].lower():
+            filtered_movies.append(i)
+    if len(filtered_movies) > 0:
+        response = random.choice(filtered_movies)
+        kian_movies.remove(response)
+        delete_query = {"_id": response._id}
+        movies_col.delete_one(delete_query)
+        await ctx.channel.send(f'Tonights movie of genre {response.genre} will be: {response.title}')
+    else:
+        await ctx.channel.send(f'No movies of genre {string_split[0]}')
+
 
 #event which triggers when the bot connects
 @bot.event

@@ -13,9 +13,11 @@ class Movie:
     title = ""
     genre = ""
     year = 0
+    server = ""
 
-    def __init__(self, id, title, genre, year):
+    def __init__(self, id, title, genre, year, server):
         self._id = id
         self.title = title
         self.genre = genre
         self.year = year
+        self.server = server

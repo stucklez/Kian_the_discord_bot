@@ -1,4 +1,5 @@
 import classes as classes
+import shlex
 def initquotes(quotes_col):
     kian = []
     mongo = list(quotes_col.find())
@@ -10,7 +11,7 @@ def initmovies(movies_col):
     movies = []
     mongo = list(movies_col.find())
     for i in mongo:
-        movies.append(classes.Movie(i["_id"], i["Title"], i["Genre"], i["Year"]))
+        movies.append(classes.Movie(i["_id"], i["Title"], i["Genre"], i["Year"], i["Server"]))
     return movies
 
 def get_quote(message):
@@ -23,3 +24,9 @@ def get_quote(message):
     for i in string_split:
         quote += i
     return classes.Quote("", author, quote)
+
+def get_movie(message):
+    string_split = shlex.split(message)
+    string_split.remove('<3add_movie')
+    movie = classes.Movie("", string_split[0], string_split[1].lower(), int(string_split[2]), 0)
+    return movie
