@@ -26,9 +26,7 @@ movies_col = db.Movies
 
 #reading quotes from the text file and storing them for use
 
-kian_quotes = hp.initquotes(movies_col)
-
-
+kian_quotes = hp.initquotes(quotes_col)
 
 for i in kian_quotes:
     print(f'{i.author} - "{i.quote}"')
@@ -133,16 +131,12 @@ async def ping(ctx):
 async def quote_add(ctx):
     server_id = ctx.message.guild.id
     if str(server_id) == GUILD_ID:
-        quote = ctx.message.content
-        string_split = quote.split(" ")
-        string_split.remove('<3quote_add')
-        new_quote = ""
-        for string in string_split:
-            new_quote += string + " "
+        new_quote = hp.get_quote(ctx.message.content)
+        document = {"Author": new_quote.author,
+                    "Quote": new_quote.quote}
+        _id = quotes_col.insert_one(document).inserted_id
+        new_quote._id = _id
         kian_quotes.append(new_quote)
-        quotesfile = open("quotes.txt", "a")
-        quotesfile.write(f'\n{new_quote}')
-        quotesfile.close()
         await ctx.message.add_reaction(like)
     else:
         await ctx.channel.send('Not connected to the right server')
@@ -152,7 +146,7 @@ async def quote(ctx):
     server_id = ctx.message.guild.id
     if str(server_id) == GUILD_ID:
         response = random.choice(kian_quotes)
-        await ctx.channel.send(response)
+        await ctx.channel.send(f'{response.author} - {response.quote}')
     else:
         await ctx.channel.send('Not connected to the right server')
 

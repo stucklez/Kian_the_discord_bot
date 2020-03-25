@@ -11,5 +11,15 @@ def initmovies(movies_col):
     mongo = list(movies_col.find())
     for i in mongo:
         movies.append(classes.Movie(i["_id"], i["Title"], i["Genre"], i["Year"]))
-        movies.append(classes.Movie(i["_id"], i["Title"], i["Genre"], i["Year"]))
     return movies
+
+def get_quote(message):
+    string_split = message.split(" ")
+    string_split.remove('<3quote_add')
+    string_split.remove('-')
+    author = string_split[0]
+    del string_split[0]
+    quote = ""
+    for i in string_split:
+        quote += i
+    return classes.Quote("", author, quote)
