@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 import helperfunctions as hp
 import classes as classes
 
+
 #loading enviroment variables
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -42,7 +43,9 @@ movie_emote = '\U0001F3A5'
 
 bot = commands.Bot(command_prefix = '<3')
 
+
 #commands which trigger when the prefix <3 is used
+
 @bot.command()
 async def stop(ctx):
     await ctx.voice_client.stop()
@@ -234,9 +237,9 @@ async def on_message(message):
 
     if 'kian kan' in message.content.lower() or 'kian må' in message.content.lower() or 'kian skal' in message.content.lower():
         choice = random.randint(1, 2)
-        if choice is 1:
+        if choice == 1:
             await message.channel.send('Ja')
-        elif choice is 2:
+        elif choice == 2:
             await message.channel.send('Nej')
     
     if 'nemt kian' in message.content.lower():
