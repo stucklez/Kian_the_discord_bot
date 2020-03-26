@@ -1,5 +1,7 @@
 import classes as classes
 import shlex
+import random
+
 def initquotes(quotes_col):
     kian = []
     mongo = list(quotes_col.find())
@@ -30,3 +32,13 @@ def get_movie(message):
     string_split.remove('<3add_movie')
     movie = classes.Movie("", string_split[0], string_split[1].lower(), int(string_split[2]), 0)
     return movie
+
+def choose_by_genre(movies, server_id):
+    server_movies = []
+    for i in movies:
+        if i.server == server_id:
+            server_movies.append(i)
+    if len(server_movies) > 0:
+        return random.choice(server_movies)
+    else:
+        return None

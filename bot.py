@@ -94,6 +94,20 @@ async def horn(ctx):
     await ctx.message.add_reaction(horn_emote)
     await vc.disconnect()
 
+@bot.command()
+async def bonk(ctx):
+    print(f'joining')
+    bonk = FFmpegPCMAudio('Bonk Sound Effect #2.mp3')
+    if ctx.voice_client is not None:
+        ctx.voice_client.play(horn)
+    else:
+        channel = ctx.message.author.voice.channel
+        vc = await channel.connect()
+        vc.play(bonk)
+    while vc.is_playing():
+        True
+    await vc.disconnect()
+
 
 @bot.command()
 async def brev(ctx):
@@ -148,6 +162,15 @@ async def quote(ctx):
         await ctx.channel.send('Not connected to the right server')
 
 @bot.command()
+async def list_movies(ctx):
+    send_string = ""
+    for i in kian_movies:
+        if i.server == ctx.message.guild.id:
+            send_string += i.title + "\n"
+    await ctx.channel.send(f'List of movies\n{send_string}')
+
+
+@bot.command()
 async def add_movie(ctx):
     movie = hp.get_movie(ctx.message.content)
     movie.server = ctx.message.guild.id
@@ -162,11 +185,14 @@ async def add_movie(ctx):
 
 @bot.command()
 async def movie(ctx):
-    response = random.choice(kian_movies)
-    kian_movies.remove(response)
-    delete_query = {"_id": response._id}
-    movies_col.delete_one(delete_query)
-    await ctx.channel.send(f'Tonights movie will be: {response.title}')
+    response = hp.choose_by_genre(kian_movies, ctx.message.guild.id)
+    if response is not None:
+        kian_movies.remove(response)
+        delete_query = {"_id": response._id}
+        movies_col.delete_one(delete_query)
+        await ctx.channel.send(f'Tonights movie will be: {response.title}')
+    else:
+        await ctx.channel.send(f'There are no movies for this server')
 
 @bot.command()
 async def by_genre(ctx):
