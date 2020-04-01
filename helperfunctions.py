@@ -2,6 +2,7 @@ import classes as classes
 import shlex
 import random
 
+#initializing quotes
 def initquotes(quotes_col):
     kian = []
     mongo = list(quotes_col.find())
