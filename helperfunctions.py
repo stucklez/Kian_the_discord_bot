@@ -24,7 +24,7 @@ def get_quote(message):
     del string_split[0]
     quote = ""
     for i in string_split:
-        quote += i
+        quote += i + " "
     return classes.Quote("", author, quote)
 
 def get_movie(message):
