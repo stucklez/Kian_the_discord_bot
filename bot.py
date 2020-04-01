@@ -14,10 +14,11 @@ import classes as classes
 
 #loading enviroment variables
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
-GUILD_ID = os.getenv('DISCORD_GUILD')
-MONGO_URI = os.getenv('MONGO_URI')
+
+TOKEN = os.environ.get('DISCORD_TOKEN')
+GUILD = os.environ.get('DISCORD_GUILD')
+GUILD_ID = os.environ.get('DISCORD_GUILD')
+MONGO_URI = os.environ.get('MONGO_URI')
 
 dbclient = pymongo.MongoClient(MONGO_URI)
 db = dbclient.Kian
