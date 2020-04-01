@@ -168,8 +168,6 @@ async def list_movies(ctx):
         if i.server == ctx.message.guild.id:
             send_string += i.title + "\n"
     await ctx.channel.send(f'List of movies\n{send_string}')
-
-
 @bot.command()
 async def add_movie(ctx):
     movie = hp.get_movie(ctx.message.content)
