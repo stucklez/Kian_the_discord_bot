@@ -159,8 +159,19 @@ async def quote(ctx):
     if str(server_id) == GUILD_ID:
         response = random.choice(kian_quotes)
         await ctx.channel.send(f'{response.author} - {response.quote}')
+        if response._id == "5e84f22e4616e239ec9832b6":
+            await hp.sleep(ctx)
     else:
         await ctx.channel.send('Not connected to the right server')
+
+@bot.command()
+async def morten_sleep(ctx):
+    server_id = ctx.message.guild.id
+    if str(server_id) == GUILD_ID:
+        await hp.sleep(ctx)
+    else:
+        await ctx.channel.send('No Morten in this server')
+
 
 @bot.command()
 async def list_movies(ctx):

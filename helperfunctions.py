@@ -1,6 +1,7 @@
 import classes as classes
 import shlex
 import random
+from discord import FFmpegPCMAudio
 
 #initializing quotes
 def initquotes(quotes_col):
@@ -43,3 +44,15 @@ def choose_by_genre(movies, server_id):
         return random.choice(server_movies)
     else:
         return None
+
+async def sleep(ctx):
+    snoring = FFmpegPCMAudio('Snoring-Popup_Pixels-869228912.mp3')
+    if ctx.voice_client is not None:
+        ctx.voice_client.play(snoring)
+    else:
+        channel = ctx.message.author.voice.channel
+        vc = await channel.connect()
+        vc.play(snoring)
+    while vc.is_playing():
+        True
+    await vc.disconnect()
