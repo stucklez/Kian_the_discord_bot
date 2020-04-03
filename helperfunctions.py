@@ -10,7 +10,7 @@ def initquotes(quotes_col):
     for i in mongo:
         kian.append(classes.Quote(i["_id"], i["Author"], i["Quote"]))
     return kian
-
+#initializing quotes
 def initmovies(movies_col):
     movies = []
     mongo = list(movies_col.find())
